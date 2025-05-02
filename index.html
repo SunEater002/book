@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Portafolio</title>
+  <link rel="website icon" type="jpg" href="./img/network.png"/>
+  <link rel="stylesheet" href="./src/input.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-300 via-pink-400 to-pink-600 animate-gradient-x">
+
+  <div class="flex flex-col items-center gap-4 w-full" data-aos="fade-down" data-aos-duration="1200">
+
+    <div id="book"
+    class="relative w-[350px] max-w-[95vw] aspect-[1/1.15] min-h-[370px] max-h-[550px] rounded-xl overflow-hidden glass shadow-2xl font-serif font-bold text-gray-800 border-2 border-pink-200"
+    data-aos="flip-left" data-aos-delay="600">
+    <!-- Las páginas se generan dinámicamente -->
+    </div>
+
+    <div class="flex gap-2 mb-2 font-mono font-bold text-2xl text-white" data-aos="zoom-in" data-aos-delay="300">
+      <button id="prevPageBtn"
+        class="px-4 py-2 rounded bg-pink-500 text-white font-semibold hover:bg-pink-600 transition transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-300">
+        ⮜ Anterior
+      </button>
+      <button id="nextPageBtn"
+        class="px-4 py-2 rounded bg-pink-500 text-white font-semibold hover:bg-pink-600 transition transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-300">
+        Siguiente ⮞
+      </button>
+      <button id="addPageBtn"
+        class="px-4 py-2 rounded border border-pink-500 bg-white text-pink-500 font-semibold hover:bg-pink-50 transition transform hover:scale-110 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300">
+        + Página
+      </button>
+    </div>
+  </div>
+
+  <input type="file" id="imageInput" accept="image/*" class="hidden" />
+  <script>
+    AOS.init();
+  </script>
+  <script src="/script.js"></script>
+</body>
+</html>

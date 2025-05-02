@@ -1,0 +1,17 @@
+{
+  "name": "editable-book",
+  "version": "1.0.0",
+  "description": "Libro digital editable con Tailwind CSS local",
+  "main": "index.html",
+  "scripts": {
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "serve": "live-server --open=index.html",
+    "dev": "concurrently \"npm run build\" \"npm run serve\"",
+    "start": "live-server --open=index.html"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "live-server": "^1.2.2",
+    "concurrently": "^8.2.2"
+  }
+}

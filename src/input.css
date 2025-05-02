@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.book-shadow {
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25), 0 1.5em 2em -1em #0002;
+  }
+  .page-shadow {
+    box-shadow: 0em 0.5em 1em -0.2em #00000020, 0 0 0.5em #0001;
+  }
+  .editable:focus {
+    outline: 2px solid #ff65a3;
+    background: #e6ecec;
+  }
+  .cover-gradient {
+    background: radial-gradient(circle farthest-corner at 80% 20%, #dc06f0 0%, #df41df 100%), #312e81;
+  }
+
+
+   /* Efecto glassmorphism */
+   .glass {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  /* Animación de gradiente */
+  @keyframes gradient-x {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 6s ease-in-out infinite;
+  }
