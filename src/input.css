@@ -2,36 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-.book-shadow {
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25), 0 1.5em 2em -1em #0002;
+.book-perspective {
+  perspective: 2000px;
+}
+.book-cover, .book-page {
+  transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1), box-shadow 0.5s;
+  transform-style: preserve-3d;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+.book-cover.closed {
+  cursor: pointer;
+  transform: rotateY(0deg);
+  z-index: 10;
+}
+.book-cover.opened {
+  transform: rotateY(-180deg);
+  z-index: 1;
+}
+.book-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  backface-visibility: hidden;
+}
+.book-page.flipped {
+  transform: rotateY(-180deg);
+  z-index: 2;
+}
+.book-page:not(.flipped) {
+  z-index: 3;
+}
+.book-btn {
+  transition: transform 0.1s;
+}
+.book-btn:active {
+  transform: scale(0.95);
+}
+.book-cover-bg {
+  background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.book-cover-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(236,72,153,0.7) 0%, rgba(255,255,255,0.2) 100%);
+  border-radius: 0.75rem;
+  z-index: 0;
+}
+.book-cover-content {
+  position: relative;
+  z-index: 1;
+}
+/* Responsive fix for book height on small screens */
+@media (max-width: 640px) {
+  .book-perspective {
+    height: 70vw !important;
+    min-height: 220px !important;
+    max-height: 80vw !important;
   }
-  .page-shadow {
-    box-shadow: 0em 0.5em 1em -0.2em #00000020, 0 0 0.5em #0001;
-  }
-  .editable:focus {
-    outline: 2px solid #ff65a3;
-    background: #e6ecec;
-  }
-  .cover-gradient {
-    background: radial-gradient(circle farthest-corner at 80% 20%, #dc06f0 0%, #df41df 100%), #312e81;
-  }
-
-
-   /* Efecto glassmorphism */
-   .glass {
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-  /* Animación de gradiente */
-  @keyframes gradient-x {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradient-x 6s ease-in-out infinite;
-  }
+}

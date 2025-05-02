@@ -1,47 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Portafolio</title>
-  <link rel="website icon" type="jpg" href="./img/network.png"/>
-  <link rel="stylesheet" href="./src/input.css">
+  <title>Libro Interactivo</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/29/29302.png"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <link rel="stylesheet" href="src/input.css">
 </head>
 
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-300 via-pink-400 to-pink-600 animate-gradient-x">
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-300 via-pink-400 to-pink-600">
 
-  <div class="flex flex-col items-center gap-4 w-full" data-aos="fade-down" data-aos-duration="1200">
-
-    <div id="book"
-    class="relative w-[350px] max-w-[95vw] aspect-[1/1.15] min-h-[370px] max-h-[550px] rounded-xl overflow-hidden glass shadow-2xl font-serif font-bold text-gray-800 border-2 border-pink-200"
-    data-aos="flip-left" data-aos-delay="600">
-    <!-- Las páginas se generan dinámicamente -->
+  <div class="flex flex-col items-center gap-4 w-full px-2">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white drop-shadow-lg mb-2 text-center"></h1>
+    <div class="book-perspective relative w-full max-w-[500px] aspect-[10/7] sm:w-[500px] sm:h-[350px] h-[60vw] min-h-[220px] max-h-[80vw] select-none">
+      <!-- Book Cover -->
+      <div id="bookCover" class="book-cover closed book-cover-bg absolute w-full h-full flex flex-col items-center justify-center rounded-xl shadow-2xl border-4 border-pink-200 z-10">
+        <div class="book-cover-content flex flex-col items-center justify-center w-full h-full">
+          <span class="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg text-center">Mi Gran Historia</span>
+          <span class="mt-4 text-base sm:text-lg text-white font-semibold bg-pink-500/60 px-4 py-1 rounded">Haz click para abrir</span>
+          <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" class="w-16 sm:w-20 mt-6 opacity-90" alt="icono libro" />
+        </div>
+      </div>
+      <!-- Book Pages -->
+      <div id="bookPages" class="relative w-full h-full">
+        <!-- Las páginas se generan por JS -->
+      </div>
     </div>
-
-    <div class="flex gap-2 mb-2 font-mono font-bold text-2xl text-white" data-aos="zoom-in" data-aos-delay="300">
-      <button id="prevPageBtn"
-        class="px-4 py-2 rounded bg-pink-500 text-white font-semibold hover:bg-pink-600 transition transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-300">
-        ⮜ Anterior
-      </button>
-      <button id="nextPageBtn"
-        class="px-4 py-2 rounded bg-pink-500 text-white font-semibold hover:bg-pink-600 transition transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-300">
-        Siguiente ⮞
-      </button>
-      <button id="addPageBtn"
-        class="px-4 py-2 rounded border border-pink-500 bg-white text-pink-500 font-semibold hover:bg-pink-50 transition transform hover:scale-110 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300">
-        + Página
-      </button>
+    <div class="flex gap-2 sm:gap-4 mt-2 w-full justify-center">
+      <button id="prevBtn" class="book-btn px-4 sm:px-6 py-2 rounded-lg bg-white text-pink-500 font-bold text-lg sm:text-xl shadow hover:bg-pink-100 hover:text-pink-700 transition disabled:opacity-40" disabled>⮜ Anterior</button>
+      <button id="nextBtn" class="book-btn px-4 sm:px-6 py-2 rounded-lg bg-white text-pink-500 font-bold text-lg sm:text-xl shadow hover:bg-pink-100 hover:text-pink-700 transition" disabled>Siguiente ⮞</button>
+      <button id="backToCoverBtn" class="book-btn px-4 sm:px-6 py-2 rounded-lg bg-pink-500 text-white font-bold text-lg sm:text-xl shadow hover:bg-pink-600 transition hidden">Volver a portada</button>
     </div>
+    <div id="pagination" class="mt-2 text-white font-mono text-base sm:text-lg"></div>
   </div>
 
-  <input type="file" id="imageInput" accept="image/*" class="hidden" />
-  <script>
-    AOS.init();
-  </script>
+  <!-- Sonido de pasar página -->
+  <audio id="flipSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae3c2.mp3" preload="auto"></audio>
+
   <script src="/script.js"></script>
 </body>
 </html>

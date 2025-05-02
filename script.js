@@ -1,161 +1,142 @@
-// --- Configuración inicial ---
-const book = document.getElementById('book');
-const prevBtn = document.getElementById('prevPageBtn');
-const nextBtn = document.getElementById('nextPageBtn');
-const addPageBtn = document.getElementById('addPageBtn');
-const imageInput = document.getElementById('imageInput');
+ // Contenido de las páginas
+ const pages = [
+    {
+      text: "Todo comenzo con un mensaje, un mensaje que llego de imprevisto y cambio todo.",
+      img: "img/img2.jpg"
+    },
+    {
+      text: "Haciendo que conociera a la persona que cambiaría mi vida para siempre y tendriamos multiples aventuras.",
+      img: "img/img1.jpg"
+    },
+    {
+      text: "Aunque no todo fue fácil, juntos superamos obstáculos y aprendimos a confiar el uno en el otro.",
+      img: "img/img3.jpg"
+    },
+    {
+      text: "Y hasta el dia de hoy, seguimos escribiendo nuestra historia juntos, por mas cosas que nos pasen, regresamos el uno con el otro",
+      img: "img/img4.jpg"
+    },
+    {
+      text: "Como dice una pelicula por ahi ...",
+      img: "img/img6.jpg"
+    },
+    {
+      text: "'LOS CABALLOS DE MAR son una de esas especies que escogen una pareja para toda la vida. Una vez que uno muere, tarda poco tiempo en morir tambien el otro. No pueden vivir el uno sin el otro. Por eso se dice que los caballos de mar MUEREN DE AMOR.'",
+      img: "img/img5.jpg"
+    },
+    {
+        text: "Feliz Cumpleaños mamor, espero que este libro te haya gustado y que lo sigas leyendo cada vez que quieras recordar lo que hemos vivido juntos.",
+        img: "img/img7.jpg"
+      }
 
-// Cada página es un objeto {content, image, isCover}
-let pages = [
-  { // Portada
-    content: '<h1 contenteditable="true" spellcheck="true" class="text-3xl font-bold text-white text-center mb-4">Mi Libro Digital</h1>',
-    image: null,
-    isCover: true
-  },
-  { // Página 1
-    content: '<div contenteditable="true" class="editable min-h-[6em] bg-gray-50 rounded p-2 mb-2" spellcheck="true">¡Escribe aquí tu historia, poema, receta, recuerdos, etc!</div>',
-    image: null
+  ];
+
+  const bookPagesDiv = document.getElementById('bookPages');
+  const bookCover = document.getElementById('bookCover');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const backToCoverBtn = document.getElementById('backToCoverBtn');
+  const pagination = document.getElementById('pagination');
+  const flipSound = document.getElementById('flipSound');
+
+  let isOpen = false;
+  let currentPage = 0;
+
+  // Crear las páginas del libro
+  function renderPages() {
+    bookPagesDiv.innerHTML = '';
+    for (let i = 0; i < pages.length; i++) {
+      const page = document.createElement('div');
+      page.className = 'book-page absolute w-full h-full flex';
+      page.style.zIndex = pages.length - i;
+      page.style.transform = 'rotateY(0deg)';
+      page.innerHTML = `
+        <div class="w-1/2 h-full flex flex-col justify-center items-center bg-white/90 border-r border-pink-200 px-6">
+          <p class="text-lg text-gray-700 font-serif text-center">${pages[i].text}</p>
+        </div>
+        <div class="w-1/2 h-full flex flex-col justify-center items-center bg-pink-50 px-4">
+          <img src="${pages[i].img}" alt="Imagen página ${i+1}" class="rounded-lg shadow-lg max-h-48 border-2 border-pink-200" />
+        </div>
+      `;
+      page.dataset.page = i;
+      bookPagesDiv.appendChild(page);
+    }
+    updatePages();
   }
-];
-let currentPage = 0;
 
-// --- Funciones para renderizar y navegar ---
-function renderBook() {
-  book.innerHTML = '';
-  pages.forEach((page, idx) => {
-    const pageDiv = document.createElement('div');
-    pageDiv.className = `absolute inset-0 w-full h-full rounded-xl flex flex-col items-stretch justify-start p-6 page-shadow transition-opacity duration-500 bg-white ${idx === currentPage ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'}`;
-    if (page.isCover) {
-      pageDiv.classList.add('cover-gradient');
-      pageDiv.classList.add('bg-blend-multiply');
-    }
-
-    // Imagen decorativa
-    if (page.image) {
-      const img = document.createElement('img');
-      img.src = page.image;
-      img.alt = "Imagen decorativa";
-      img.className = "block max-w-full max-h-48 mx-auto mb-2 rounded shadow";
-      pageDiv.appendChild(img);
-
-      // Botón para quitar imagen
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = "Quitar imagen";
-      removeBtn.className = "ml-auto mb-2 px-2 py-1 rounded bg-pink-600 text-white text-xs hover:bg-pink-700";
-      removeBtn.onclick = (e) => {
-        e.stopPropagation();
-        page.image = null;
-        saveBook();
-        renderBook();
-      };
-      pageDiv.appendChild(removeBtn);
-    }
-
-    // Botón para añadir imagen (si no hay imagen)
-    if (!page.image) {
-      const addImgBtn = document.createElement('button');
-      addImgBtn.textContent = "Agregar imagen";
-      addImgBtn.className = "mb-2 px-2 py-1 rounded border border-pink-400 bg-white text-pink-500 text-xs hover:bg-pink-50";
-      addImgBtn.onclick = (e) => {
-        e.stopPropagation();
-        imageInput.onchange = (event) => {
-          const file = event.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-              page.image = evt.target.result;
-              saveBook();
-              renderBook();
-            };
-            reader.readAsDataURL(file);
-          }
-          imageInput.value = '';
-        };
-        imageInput.click();
-      };
-      pageDiv.appendChild(addImgBtn);
-    }
-
-    // Contenido editable
-    const contentDiv = document.createElement('div');
-    contentDiv.innerHTML = page.content;
-    // Permitir edición en todos los campos contenteditable
-    contentDiv.querySelectorAll('[contenteditable]').forEach(editable => {
-      editable.oninput = () => {
-        // Guardar el HTML actualizado en la página
-        page.content = contentDiv.innerHTML;
-        saveBook();
-      };
+  // Actualiza el estado visual de las páginas y la paginación
+  function updatePages() {
+    const allPages = bookPagesDiv.querySelectorAll('.book-page');
+    allPages.forEach((page, idx) => {
+      if (idx < currentPage) {
+        page.classList.add('flipped');
+        page.style.transform = 'rotateY(-180deg)';
+      } else {
+        page.classList.remove('flipped');
+        page.style.transform = 'rotateY(0deg)';
+      }
+      // Z-index para efecto de apilado
+      page.style.zIndex = pages.length - Math.abs(currentPage - idx);
     });
-    pageDiv.appendChild(contentDiv);
-
-    // Número de página (no en portada)
-    if (!page.isCover) {
-      const pageNum = document.createElement('div');
-      pageNum.className = 'absolute bottom-4 right-6 text-xs text-gray-400';
-      pageNum.textContent = idx;
-      pageDiv.appendChild(pageNum);
+    prevBtn.disabled = !isOpen || currentPage === 0;
+    nextBtn.disabled = !isOpen || currentPage === pages.length;
+    // Paginación visual
+    if (isOpen && currentPage < pages.length) {
+      pagination.innerHTML = `<span class="bg-pink-500/80 px-3 py-1 rounded shadow">Página ${currentPage + 1} de ${pages.length}</span>`;
+    } else {
+      pagination.innerHTML = '';
     }
+  }
 
-    book.appendChild(pageDiv);
+  // Abrir el libro
+  bookCover.addEventListener('click', () => {
+    if (isOpen) return;
+    isOpen = true;
+    bookCover.classList.remove('closed');
+    bookCover.classList.add('opened');
+    bookCover.style.pointerEvents = 'none';
+    nextBtn.disabled = false;
+    backToCoverBtn.classList.remove('hidden');
+    renderPages();
+    updatePages();
   });
 
-  // Botones de navegación
-  prevBtn.disabled = currentPage === 0;
-  nextBtn.disabled = currentPage === pages.length - 1;
-}
-
-prevBtn.onclick = () => {
-  if (currentPage > 0) {
-    currentPage--;
-    renderBook();
-  }
-};
-nextBtn.onclick = () => {
-  if (currentPage < pages.length - 1) {
+  // Botón siguiente
+  nextBtn.addEventListener('click', () => {
+    if (!isOpen || currentPage >= pages.length) return;
     currentPage++;
-    renderBook();
-  }
-};
-addPageBtn.onclick = () => {
-  pages.push({
-    content: '<div contenteditable="true" class="editable min-h-[6em] bg-gray-50 rounded p-2 mb-2" spellcheck="true">Nueva página. Haz click aquí para escribir.</div>',
-    image: null
+    playFlipSound();
+    updatePages();
   });
-  currentPage = pages.length - 1;
-  saveBook();
-  renderBook();
-};
 
-// Permite pasar página con flechas del teclado
-document.addEventListener('keydown', (e) => {
-  if (e.target.closest('[contenteditable]')) return; // No interferir al escribir
-  if (e.key === 'ArrowRight') nextBtn.click();
-  if (e.key === 'ArrowLeft') prevBtn.click();
-});
+  // Botón anterior
+  prevBtn.addEventListener('click', () => {
+    if (!isOpen || currentPage <= 0) return;
+    currentPage--;
+    playFlipSound();
+    updatePages();
+  });
 
-// Permite pasar página haciendo click en los bordes
-book.addEventListener('click', (e) => {
-  if (e.target.classList.contains('mb-2')) return; // No interferir con botones de imagen
-  const rect = book.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  if (x < rect.width * 0.25 && currentPage > 0) prevBtn.click();
-  else if (x > rect.width * 0.75 && currentPage < pages.length - 1) nextBtn.click();
-});
+  // Botón volver a portada
+  backToCoverBtn.addEventListener('click', () => {
+    isOpen = false;
+    currentPage = 0;
+    bookCover.classList.remove('opened');
+    bookCover.classList.add('closed');
+    bookCover.style.pointerEvents = 'auto';
+    backToCoverBtn.classList.add('hidden');
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    pagination.innerHTML = '';
+    // Oculta las páginas
+    bookPagesDiv.innerHTML = '';
+  });
 
-// Guardado local (puedes quitar esto si no quieres persistencia local)
-function saveBook() {
-  localStorage.setItem('editableBookPages', JSON.stringify(pages));
-}
-function loadBook() {
-  const data = localStorage.getItem('editableBookPages');
-  if (data) {
-    try {
-      pages = JSON.parse(data);
-    } catch {}
+  // Sonido al pasar página
+  function playFlipSound() {
+    flipSound.currentTime = 0;
+    flipSound.play();
   }
-}
 
-// Render inicial y carga local
-loadBook();
-renderBook();
+  // Inicial
+  renderPages();
